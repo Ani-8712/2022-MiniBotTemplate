@@ -22,4 +22,8 @@ import team3647.lib.drivers.SparkMaxFactory;
 public final class Constants {
     public static TalonFX left = new TalonFX(0);
     public static TalonFX right = new TalonFX(1);
+
+    static {
+        right.setInverted(true);
+    }
 }
