@@ -4,7 +4,9 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 
-/** Joysticks wrapper to provide easier access to buttons, triggers and sticks. */
+/**
+ * Joysticks wrapper to provide easier access to buttons, triggers and sticks.
+ */
 public class Joysticks {
 
     public final JoystickTrigger leftTrigger;
@@ -26,7 +28,9 @@ public class Joysticks {
     public final POVButton dPadRight;
     public final POVButton dPadUp;
 
-    /** XboxController Object for Controller; contains all Xbox Controller Functions */
+    /**
+     * XboxController Object for Controller; contains all Xbox Controller Functions
+     */
     private final XboxController controller;
 
     private final int controllerPin;
@@ -36,11 +40,9 @@ public class Joysticks {
         this.controllerPin = controllerPin;
 
         leftTrigger = new JoystickTrigger(controller, XboxController.Axis.kLeftTrigger.value, .15);
-        rightTrigger =
-                new JoystickTrigger(controller, XboxController.Axis.kRightTrigger.value, .15);
+        rightTrigger = new JoystickTrigger(controller, XboxController.Axis.kRightTrigger.value, .15);
 
-        rightJoyStickPress =
-                new JoystickButton(controller, XboxController.Button.kRightStick.value);
+        rightJoyStickPress = new JoystickButton(controller, XboxController.Button.kRightStick.value);
         leftJoyStickPress = new JoystickButton(controller, XboxController.Button.kLeftStick.value);
         leftMidButton = new JoystickButton(controller, XboxController.Button.kBack.value);
         rightMidButton = new JoystickButton(controller, XboxController.Button.kStart.value);
@@ -82,11 +84,25 @@ public class Joysticks {
         return applyDeadband(controller.getRawAxis(XboxController.Axis.kLeftTrigger.value));
     }
 
+    public boolean getAPressed() {
+        return this.buttonA.getAsBoolean();
+    }
+
+    public double getBButton() {
+        if (this.buttonB.getAsBoolean()) {
+            return 1.0;
+        } else {
+            return 0.0;
+        }
+
+    }
+
     /**
-     * Returns 0.0 if the given value is within the specified range around zero. The remaining range
+     * Returns 0.0 if the given value is within the specified range around zero. The
+     * remaining range
      * between the deadband and 1.0 is scaled from 0.0 to 1.0.
      *
-     * @param value value to clip
+     * @param value    value to clip
      * @param deadband range around zero
      */
     private double applyDeadband(double value, double deadband) {
@@ -102,10 +118,11 @@ public class Joysticks {
     }
 
     /**
-     * Returns 0.0 if the given value is within the specified range around zero. The remaining range
+     * Returns 0.0 if the given value is within the specified range around zero. The
+     * remaining range
      * between the deadband and 1.0 is scaled from 0.0 to 1.0.
      *
-     * @param value value to clip
+     * @param value    value to clip
      * @param deadband range around zero
      */
     private double applyDeadband(double value) {

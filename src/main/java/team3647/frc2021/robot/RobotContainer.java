@@ -26,7 +26,7 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    dt.setDefaultCommand(new ArcadeDrive(this.dt, mainController::getLeftStickY, mainController::getRightStickX));
+    dt.setDefaultCommand(new ArcadeDrive(this.dt, mainController::getAPressed, mainController::getBButton));
     // Configure the button bindings
     configureButtonBindings();
   }
@@ -38,8 +38,8 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    mainController.buttonA.whenPressed(new RunCommand(dt::setBrake, dt));
-    mainController.buttonB.whenPressed(new RunCommand(dt::setCoast, dt));
+    mainController.buttonX.whenPressed(new RunCommand(dt::setBrake, dt));
+    mainController.buttonY.whenPressed(new RunCommand(dt::setCoast, dt));
 
   }
 

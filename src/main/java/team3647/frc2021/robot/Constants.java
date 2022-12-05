@@ -20,8 +20,8 @@ import team3647.lib.drivers.SparkMaxFactory;
  * wherever the constants are needed, to reduce verbosity.
  */
 public final class Constants {
-    public static TalonFX left = new TalonFX(0);
-    public static TalonFX right = new TalonFX(1);
+    public static TalonFX left = new TalonFX(1);
+    public static TalonFX right = new TalonFX(2);
 
     static {
         right.setInverted(true);

@@ -1,5 +1,6 @@
 package team3647.frc2021.commands;
 
+import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -7,11 +8,12 @@ import team3647.frc2021.subsystems.Drivetrain;
 
 public class ArcadeDrive extends CommandBase {
     private Drivetrain dt;
-    private DoubleSupplier throttle;
+    private BooleanSupplier go;
     private DoubleSupplier turn;
-    public ArcadeDrive(Drivetrain dt, DoubleSupplier throttle, DoubleSupplier turn) {
+    //constructor
+    public ArcadeDrive(Drivetrain dt, BooleanSupplier throttle, DoubleSupplier turn) {
         this.dt = dt;
-        this.throttle = throttle;
+        this.go = throttle;
         this.turn = turn;
         addRequirements(dt);
     }
@@ -23,7 +25,9 @@ public class ArcadeDrive extends CommandBase {
 
     @Override
     public void execute() {
-        dt.curvatureDrive(this.throttle.getAsDouble(), this.turn.getAsDouble(), false);
+        if(go.getAsBoolean()){
+            dt.setDegs();
+        }
     }
 
     @Override

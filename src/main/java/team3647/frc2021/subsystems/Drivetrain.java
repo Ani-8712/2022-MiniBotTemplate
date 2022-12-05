@@ -14,7 +14,7 @@ public class Drivetrain implements PeriodicSubsystem {
     private TalonFX right;
     private double m_maxOutput;
     private PeriodicIO periodicIO = new PeriodicIO();
-    private ControlMode controlMode = ControlMode.PercentOutput;
+    private ControlMode controlMode = ControlMode.Position;
 
     private static class PeriodicIO {
         public double leftOutput;
@@ -27,15 +27,19 @@ public class Drivetrain implements PeriodicSubsystem {
         this.right = right;
     }
 
-    public void setOpenloop(double leftOut, double rightOut) {
-        periodicIO.controlMode = ControlMode.PercentOutput;
-        periodicIO.leftOutput = leftOut;
-        periodicIO.rightOutput = rightOut;
+    public void setOpenloop(double leftOut) {
+        periodicIO.controlMode = ControlMode.Position;
+        periodicIO.leftOutput = leftOut ;
+       
+    }
+
+    public void setDegs(){
+        setOpenloop(45.0);
     }
 
     public void curvatureDrive(double xSpeed, double zRotation, boolean isQuickTurn) {
-        WheelSpeeds ws = DifferentialDrive.curvatureDriveIK(xSpeed, zRotation, isQuickTurn);
-        setOpenloop(ws.left, ws.right);
+        //WheelSpeeds ws = DifferentialDrive.curvatureDriveIK(xSpeed, zRotation, isQuickTurn);
+        //setOpenloop(ws.left, ws.right);
     }
 
     public void setBrake() {
@@ -61,8 +65,8 @@ public class Drivetrain implements PeriodicSubsystem {
 
     @Override
     public void writePeriodicOutputs() {
-        left.set(controlMode, periodicIO.leftOutput);
-        right.set(controlMode, periodicIO.rightOutput);
+        left.set(controlMode, (periodicIO.leftOutput * 1.37243));
+        right.set(controlMode, (periodicIO.leftOutput * 1.37243));
     }
 
     @Override
