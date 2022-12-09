@@ -10,32 +10,36 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive.WheelSpeeds;
 
 public class Drivetrain implements PeriodicSubsystem {
-    private TalonFX left;
-    private TalonFX right;
-    private double m_maxOutput;
+    private final TalonFX left;
+    private final TalonFX right;
+    private final double kPositionConversion;
     private PeriodicIO periodicIO = new PeriodicIO();
-    private ControlMode controlMode = ControlMode.Position;
 
     private static class PeriodicIO {
-        public double leftOutput;
-        public double rightOutput;
-        public ControlMode controlMode;
+        public double leftOutput = 0;
+        public double rightOutput = 0;
+        public ControlMode controlMode = ControlMode.PercentOutput;
+        
+
+
+        public double leftPosition;
+        public double rightPosition;
     }
 
-    public Drivetrain(TalonFX left, TalonFX right) {
+    public Drivetrain(TalonFX left, TalonFX right, double positionConversion) {
         this.left = left;
         this.right = right;
+        this.kPositionConversion = positionConversion;
+        resetEncoders();
     }
 
-    public void setOpenloop(double leftOut) {
+d
+    public void setLeftPositionDegrees(double degrees) {
+        this.periodicIO.leftOutput = (degrees % 360) / this.kPositionConversion;
         periodicIO.controlMode = ControlMode.Position;
-        periodicIO.leftOutput = leftOut ;
-       
+        this.periodicIO.rightOutput = periodicIO.rightPosition;
     }
 
-    public void setDegs(){
-        setOpenloop(45.0);
-    }
 
     public void curvatureDrive(double xSpeed, double zRotation, boolean isQuickTurn) {
         //WheelSpeeds ws = DifferentialDrive.curvatureDriveIK(xSpeed, zRotation, isQuickTurn);
@@ -45,6 +49,11 @@ public class Drivetrain implements PeriodicSubsystem {
     public void setBrake() {
         this.left.setNeutralMode(NeutralMode.Brake);
         this.right.setNeutralMode(NeutralMode.Brake);
+    }
+
+    private void resetEncoders(){
+        right.setSelectedSensorPosition(0);
+        left.setSelectedSensorPosition(0);
     }
 
     public void setCoast() {
@@ -60,13 +69,18 @@ public class Drivetrain implements PeriodicSubsystem {
 
     @Override
     public void readPeriodicInputs() {
+        periodicIO.leftPosition = left.getSelectedSensorPosition() * kPositionConversion % 360;
+        periodicIO.rightPosition = right.getSelectedSensorPosition() * kPositionConversion % 360;
+    }
 
+    public double getLeftDegrees() {
+        return periodicIO.leftPosition;
     }
 
     @Override
     public void writePeriodicOutputs() {
-        left.set(controlMode, (periodicIO.leftOutput * 1.37243));
-        right.set(controlMode, (periodicIO.leftOutput * 1.37243));
+        left.set(periodicIO.controlMode, periodicIO.leftPosition);
+        right.set(periodicIO.controlMode, periodicIO.rightPosition);
     }
 
     @Override
